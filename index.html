@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Slash Focus Board</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+    :root {
+      --color-obsidian: #08080a;
+      --color-onyx: #040406;
+      --color-carbon: #121317;
+      --color-graphite: #1c1d22;
+      --color-slate: #2e3038;
+      --color-smoke: #464853;
+      --color-ash: #5e616e;
+      --color-steel: #777a88;
+      --color-fog: #9194a1;
+      --color-mist: #acafb9;
+      --color-silver: #c7c9d1;
+      --color-bone: #e2e3e9;
+      --color-paper-white: #ffffff;
+      --color-copper: #cc9166;
+      --gradient-gilded-gradient: linear-gradient(
+        103deg,
+        rgb(174, 147, 87),
+        rgb(255, 240, 204) 40%,
+        rgb(174, 147, 87) 70%,
+        rgba(189, 157, 79, 0)
+      );
+
+      --font-ivy-presto: "Instrument Serif", ui-serif, Georgia, serif;
+      --font-inter: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+      --text-eyebrow: 13px;
+      --text-body-xs: 16px;
+      --text-body-sm: 18px;
+      --text-body: 20px;
+      --text-heading-sm: 44px;
+      --text-heading-lg: 64px;
+
+      --spacing-4: 4px;
+      --spacing-6: 6px;
+      --spacing-8: 8px;
+      --spacing-10: 10px;
+      --spacing-12: 12px;
+      --spacing-16: 16px;
+      --spacing-20: 20px;
+      --spacing-24: 24px;
+      --spacing-32: 32px;
+      --spacing-40: 40px;
+
+      --page-max-width: 1216px;
+      --card-padding: 24px;
+      --radius-sm: 2px;
+      --radius-lg: 10px;
+      --radius-full: 9999px;
+
+      --surface-void: #08080a;
+      --surface-card: #040406;
+      --surface-panel: #121317;
+      --surface-floating: #1c1d22;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      min-height: 100vh;
+      background: var(--surface-void);
+      color: var(--color-bone);
+      font-family: var(--font-inter);
+      font-size: var(--text-body-xs);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, input {
+      font: inherit;
+      color: inherit;
+    }
+
+    button {
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+
+    .app-shell {
+      max-width: var(--page-max-width);
+      margin: 0 auto;
+      padding: var(--spacing-24) var(--spacing-16) var(--spacing-40);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-24);
+    }
+
+    .app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--spacing-24);
+    }
+
+    .brand-lockup {
+      max-width: 640px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
+    }
+
+    .brand-eyebrow {
+      font-size: var(--text-eyebrow);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      color: var(--color-copper);
+    }
+
+    .brand-title {
+      font-family: var(--font-ivy-presto);
+      font-size: clamp(42px, 7vw, var(--text-heading-lg));
+      line-height: 1.05;
+      letter-spacing: 0.01em;
+      color: var(--color-paper-white);
+    }
+
+    .brand-subtitle {
+      font-size: var(--text-body);
+      line-height: 1.38;
+      letter-spacing: -0.04em;
+      color: var(--color-fog);
+      max-width: 560px;
+    }
+
+    .capture-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-8);
+      margin-top: var(--spacing-12);
+    }
+
+    .input-pill {
+      flex: 1 1 260px;
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--color-paper-white);
+      border-radius: var(--radius-full);
+      padding: 10px 20px;
+      background: transparent;
+    }
+
+    .input-pill input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+    }
+
+    .input-pill input::placeholder,
+    .quick-input input::placeholder {
+      color: var(--color-steel);
+    }
+
+    .primary-pill {
+      border-radius: var(--radius-full);
+      background: var(--color-paper-white);
+      color: #000;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .ghost-button,
+    .focus-secondary,
+    .archive-action {
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-paper-white);
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-paper-white);
+      background: transparent;
+    }
+
+    .ghost-button:hover,
+    .focus-secondary:hover,
+    .archive-action:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .header-stats {
+      min-width: 260px;
+      background: var(--surface-panel);
+      border: 1px solid var(--color-graphite);
+      border-radius: var(--radius-lg);
+      padding: var(--card-padding);
+    }
+
+    .rail-label {
+      font-size: var(--text-eyebrow);
+      font-weight: 600;
+      color: var(--color-fog);
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      margin-bottom: var(--spacing-8);
+    }
+
+    .stats-row {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-8);
+    }
+
+    .stat-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      color: var(--color-mist);
+      font-size: 14px;
+    }
+
+    .stat-line strong {
+      color: var(--color-bone);
+      font-weight: 600;
+    }
+
+    .progress-bar {
+      position: relative;
+      height: 4px;
+      border-radius: var(--radius-full);
+      background: var(--color-slate);
+      margin-top: var(--spacing-12);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      background-image: var(--gradient-gilded-gradient);
+      border-radius: var(--radius-full);
+      transition: width 180ms ease;
+    }
+
+    .app-main {
+      display: grid;
+      grid-template-columns: minmax(220px, 260px) minmax(0, 1.35fr) minmax(280px, 340px);
+      gap: var(--spacing-24);
+      align-items: start;
+    }
+
+    .left-rail,
+    .archive-panel-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-16);
+    }
+
+    .rail-card,
+    .board-card,
+    .focus-panel,
+    .archive-panel {
+      background: var(--surface-card);
+      border: 1px solid var(--color-graphite);
+      border-radius: var(--radius-lg);
+      padding: var(--card-padding);
+    }
+
+    .rail-card {
+      background: var(--surface-panel);
+    }
+
+    .list-header,
+    .board-header,
+    .focus-header,
+    .archive-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: var(--spacing-12);
+    }
+
+    .list-title,
+    .archive-title-small {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-silver);
+    }
+
+    .list-count,
+    .archive-count {
+      font-size: 12px;
+      color: var(--color-ash);
+    }
+
+    .task-list,
+    .archive-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-8);
+      margin-top: var(--spacing-12);
+    }
+
+    .board-title,
+    .focus-title {
+      font-family: var(--font-ivy-presto);
+      color: var(--color-paper-white);
+      letter-spacing: 0.01em;
+    }
+
+    .board-title {
+      font-size: var(--text-heading-sm);
+      line-height: 1.15;
+    }
+
+    .focus-title {
+      font-size: 34px;
+      line-height: 1.1;
+    }
+
+    .board-subtitle,
+    .focus-body,
+    .archive-subtitle {
+      font-size: 14px;
+      color: var(--color-fog);
+      max-width: 38ch;
+    }
+
+    .board-quick-add {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-8);
+      margin-top: var(--spacing-16);
+    }
+
+    .quick-input {
+      flex: 1 1 220px;
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--color-slate);
+      border-radius: var(--radius-full);
+      padding: 8px 16px;
+      background: var(--surface-panel);
+    }
+
+    .quick-input input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      outline: none;
+    }
+
+    .task-row {
+      display: grid;
+      grid-template-columns: 24px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: var(--spacing-8);
+      padding: 10px 12px;
+      border-radius: var(--radius-lg);
+      background: var(--surface-panel);
+      border: 1px solid var(--color-graphite);
+      cursor: pointer;
+    }
+
+    .task-row:hover {
+      border-color: var(--color-slate);
+    }
+
+    .task-row[data-completed="true"] {
+      opacity: 0.58;
+      border-style: dashed;
+    }
+
+    .task-checkbox {
+      width: 18px;
+      height: 18px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-steel);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    .task-main {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .task-title {
+      font-size: 14px;
+      color: var(--color-bone);
+      overflow-wrap: anywhere;
+    }
+
+    .task-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-8);
+      font-size: 12px;
+      color: var(--color-ash);
+    }
+
+    .task-priority-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-steel);
+      padding: 2px 8px;
+      font-size: 11px;
+      color: var(--color-mist);
+      background: transparent;
+    }
+
+    .task-priority-button[data-priority="high"] {
+      color: var(--color-copper);
+      border-color: var(--color-copper);
+    }
+
+    .task-priority-button[data-priority="low"] {
+      color: var(--color-ash);
+      border-color: var(--color-slate);
+    }
+
+    .task-section-pill,
+    .pill-inline,
+    .focus-pill,
+    .focus-badge,
+    .archive-date-pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-steel);
+      padding: 2px 8px;
+      font-size: 11px;
+      color: var(--color-mist);
+    }
+
+    .task-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .task-actions button {
+      font-size: 12px;
+      color: var(--color-fog);
+    }
+
+    .task-actions button:hover {
+      color: var(--color-paper-white);
+    }
+
+    .focus-panel {
+      background: var(--surface-floating);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
+      min-height: 260px;
+    }
+
+    .focus-controls {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--spacing-12);
+      flex-wrap: wrap;
+      margin-top: var(--spacing-12);
+    }
+
+    .focus-controls-left,
+    .focus-controls-right {
+      display: flex;
+      gap: var(--spacing-8);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .focus-primary {
+      border-radius: var(--radius-full);
+      background: var(--color-paper-white);
+      color: #000;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .focus-meta-row {
+      display: flex;
+      gap: var(--spacing-8);
+      flex-wrap: wrap;
+    }
+
+    .hint-row {
+      font-size: 11px;
+      color: var(--color-ash);
+      margin-top: var(--spacing-8);
+    }
+
+    .hint-row code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      border: 1px solid var(--color-slate);
+      border-radius: 9999px;
+      padding: 2px 6px;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .archive-panel-wrap {
+      margin-top: var(--spacing-8);
+    }
+
+    .archive-subtitle {
+      margin-top: var(--spacing-8);
+    }
+
+    .archive-toolbar {
+      display: flex;
+      gap: var(--spacing-8);
+      flex-wrap: wrap;
+      margin-top: var(--spacing-12);
+    }
+
+    .archive-primary {
+      border-radius: var(--radius-full);
+      background: var(--color-paper-white);
+      color: #000;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .archive-item {
+      border: 1px solid var(--color-graphite);
+      background: var(--surface-panel);
+      border-radius: var(--radius-lg);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .archive-item-top {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--spacing-12);
+      align-items: flex-start;
+    }
+
+    .archive-item-title {
+      font-size: 14px;
+      color: var(--color-bone);
+      overflow-wrap: anywhere;
+    }
+
+    .archive-item-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--color-ash);
+    }
+
+    .archive-item-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .archive-link {
+      font-size: 12px;
+      color: var(--color-copper);
+    }
+
+    .empty-state {
+      border: 1px dashed var(--color-graphite);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      color: var(--color-fog);
+      font-size: 14px;
+      background: rgba(255,255,255,0.01);
+    }
+
+    @media (max-width: 1024px) {
+      .app-main {
+        grid-template-columns: 1fr;
+      }
+
+      .focus-panel {
+        order: -1;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .app-header {
+        flex-direction: column;
+      }
+
+      .board-title,
+      .focus-title {
+        font-size: 30px;
+      }
+
+      .brand-subtitle {
+        font-size: 18px;
+      }
+
+      .task-row {
+        grid-template-columns: 24px minmax(0, 1fr);
+      }
+
+      .task-actions {
+        grid-column: 2;
+        justify-content: flex-start;
+      }
+
+      .archive-item-top {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="brand-lockup">
+        <div class="brand-eyebrow">Slash Focus Board</div>
+        <h1 class="brand-title">Midnight ledger for deep work.</h1>
+        <p class="brand-subtitle">
+          Capture everything, promote what matters, and close the day with a small archive review instead of a messy pile of half-finished tasks.
+        </p>
+        <div class="capture-row">
+          <div class="input-pill">
+            <input id="captureInput" type="text" placeholder="Quick task idea… (⌘/Ctrl + Enter to add)" />
+          </div>
+          <button class="primary-pill" id="captureButton">Add to Today</button>
+        </div>
+      </div>
+
+      <div class="header-stats">
+        <div class="rail-label">Today’s ledger</div>
+        <div class="stats-row">
+          <div class="stat-line"><span>Planned</span><strong id="statPlanned">0</strong></div>
+          <div class="stat-line"><span>Completed</span><strong id="statCompleted">0</strong></div>
+          <div class="stat-line"><span>Focus sessions</span><strong id="statSessions">0</strong></div>
+          <div class="stat-line"><span>Archived</span><strong id="statArchived">0</strong></div>
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <aside class="left-rail" aria-label="Secondary queues">
+        <section class="rail-card">
+          <div class="list-header">
+            <div>
+              <div class="rail-label">Queue</div>
+              <div class="list-title">Next</div>
+            </div>
+            <div class="list-count" id="nextCount">0</div>
+          </div>
+          <div class="task-list" id="nextList"></div>
+        </section>
+
+        <section class="rail-card">
+          <div class="list-header">
+            <div class="list-title">Later</div>
+            <div class="list-count" id="laterCount">0</div>
+          </div>
+          <div class="task-list" id="laterList"></div>
+        </section>
+      </aside>
+
+      <section>
+        <div class="board-card">
+          <div class="board-header">
+            <div>
+              <h2 class="board-title">Today</h2>
+              <p class="board-subtitle">
+                Keep this list tight. Click priority to cycle it. Select any task to bring it into focus mode.
+              </p>
+            </div>
+          </div>
+
+          <div class="board-quick-add">
+            <div class="quick-input">
+              <input id="todayInput" type="text" placeholder="Add a focused task… (Enter)" />
+            </div>
+            <button class="ghost-button" id="todayAddButton">Add</button>
+          </div>
+
+          <div class="task-list" id="todayList"></div>
+        </div>
+
+        <div class="archive-panel-wrap">
+          <section class="archive-panel">
+            <div class="archive-header">
+              <div>
+                <div class="rail-label">End of day</div>
+                <h3 class="archive-title-small">Archive review</h3>
+                <p class="archive-subtitle">
+                  Move completed work out of the active board so tomorrow starts clean.
+                </p>
+              </div>
+              <div class="archive-count" id="archiveCount">0 archived</div>
+            </div>
+
+            <div class="archive-toolbar">
+              <button class="archive-primary" id="archiveCompletedButton">Archive completed</button>
+              <button class="archive-action" id="clearArchiveButton">Clear archive</button>
+            </div>
+
+            <div class="archive-list" id="archiveList"></div>
+          </section>
+        </div>
+      </section>
+
+      <aside class="focus-panel" aria-label="Focus mode">
+        <div class="focus-header">
+          <div>
+            <div class="rail-label">Focus mode</div>
+            <h2 class="focus-title" id="focusTitle">Pick a task to begin.</h2>
+          </div>
+          <div id="focusStatusPill" class="focus-pill">No task selected</div>
+        </div>
+
+        <p class="focus-body" id="focusBody">
+          Choose a task from Today, Next, or Later. Focus mode turns it into a single card with a simple session timer and clean next actions.
+        </p>
+
+        <div class="focus-meta-row">
+          <span id="focusPriority"><span class="pill-inline">Priority: —</span></span>
+          <span id="focusSection"><span class="pill-inline">Section: —</span></span>
+        </div>
+
+        <div class="focus-controls">
+          <div class="focus-controls-left">
+            <span class="focus-badge" id="focusTimerBadge">Session: 00:00</span>
+            <span class="focus-badge" id="focusTimerHint">Space: start / pause</span>
+          </div>
+          <div class="focus-controls-right">
+            <button class="focus-secondary" id="focusPriorityButton">Cycle priority</button>
+            <button class="focus-secondary" id="focusCompleteButton">Complete</button>
+            <button class="focus-primary" id="focusStartButton">Start focus</button>
+          </div>
+        </div>
+
+        <p class="hint-row">
+          Shortcuts:
+          <code>N</code> add to Today,
+          <code>P</code> cycle priority,
+          <code>1</code>/<code>2</code>/<code>3</code> move to Today/Next/Later,
+          <code>Space</code> start/pause focus,
+          <code>⌘/Ctrl + Enter</code> quick capture.
+        </p>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const TASKS_KEY = "slashFocusBoard.v2.tasks";
+      const ARCHIVE_KEY = "slashFocusBoard.v2.archive";
+      const STATS_KEY = "slashFocusBoard.v2.stats";
+
+      let tasks = loadJson(TASKS_KEY, []);
+      let archive = loadJson(ARCHIVE_KEY, []);
+      let appStats = loadJson(STATS_KEY, { focusSessions: 0 });
+
+      let focusedTaskId = null;
+      let focusTimerSeconds = 0;
+      let focusTimerInterval = null;
+
+      const priorityOrder = ["low", "normal", "high"];
+
+      const captureInput = document.getElementById("captureInput");
+      const captureButton = document.getElementById("captureButton");
+      const todayInput = document.getElementById("todayInput");
+      const todayAddButton = document.getElementById("todayAddButton");
+
+      const todayList = document.getElementById("todayList");
+      const nextList = document.getElementById("nextList");
+      const laterList = document.getElementById("laterList");
+      const archiveList = document.getElementById("archiveList");
+
+      const nextCount = document.getElementById("nextCount");
+      const laterCount = document.getElementById("laterCount");
+      const archiveCount = document.getElementById("archiveCount");
+
+      const statPlanned = document.getElementById("statPlanned");
+      const statCompleted = document.getElementById("statCompleted");
+      const statSessions = document.getElementById("statSessions");
+      const statArchived = document.getElementById("statArchived");
+      const progressFill = document.getElementById("progressFill");
+
+      const focusTitle = document.getElementById("focusTitle");
+      const focusBody = document.getElementById("focusBody");
+      const focusStatusPill = document.getElementById("focusStatusPill");
+      const focusPriority = document.getElementById("focusPriority");
+      const focusSection = document.getElementById("focusSection");
+      const focusTimerBadge = document.getElementById("focusTimerBadge");
+      const focusTimerHint = document.getElementById("focusTimerHint");
+      const focusPriorityButton = document.getElementById("focusPriorityButton");
+      const focusCompleteButton = document.getElementById("focusCompleteButton");
+      const focusStartButton = document.getElementById("focusStartButton");
+
+      const archiveCompletedButton = document.getElementById("archiveCompletedButton");
+      const clearArchiveButton = document.getElementById("clearArchiveButton");
+
+      function loadJson(key, fallback) {
+        try {
+          const raw = localStorage.getItem(key);
+          if (!raw) return fallback;
+          const parsed = JSON.parse(raw);
+          return parsed ?? fallback;
+        } catch {
+          return fallback;
+        }
+      }
+
+      function saveAll() {
+        localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
+        localStorage.setItem(ARCHIVE_KEY, JSON.stringify(archive));
+        localStorage.setItem(STATS_KEY, JSON.stringify(appStats));
+      }
+
+      function uid() {
+        return String(Date.now()) + "-" + Math.random().toString(16).slice(2);
+      }
+
+      function createTask(title, section = "today") {
+        const value = title.trim();
+        if (!value) return null;
+        const task = {
+          id: uid(),
+          title: value,
+          section,
+          priority: "normal",
+          completed: false,
+          createdAt: new Date().toISOString(),
+          completedAt: null
+        };
+        tasks.unshift(task);
+        saveAll();
+        render();
+        return task;
+      }
+
+      function getTask(taskId) {
+        return tasks.find(t => t.id === taskId) || null;
+      }
+
+      function setSection(taskId, section) {
+        const task = getTask(taskId);
+        if (!task) return;
+        task.section = section;
+        saveAll();
+        render();
+        if (focusedTaskId === taskId) updateFocusPanel(task);
+      }
+
+      function toggleCompleted(taskId) {
+        const task = getTask(taskId);
+        if (!task) return;
+        task.completed = !task.completed;
+        task.completedAt = task.completed ? new Date().toISOString() : null;
+        saveAll();
+        render();
+        if (focusedTaskId === taskId) updateFocusPanel(task);
+      }
+
+      function cyclePriority(taskId) {
+        const task = getTask(taskId);
+        if (!task) return;
+        const idx = priorityOrder.indexOf(task.priority);
+        task.priority = priorityOrder[(idx + 1) % priorityOrder.length];
+        saveAll();
+        render();
+        if (focusedTaskId === taskId) updateFocusPanel(task);
+      }
+
+      function archiveCompletedTasks() {
+        const completed = tasks.filter(t => t.completed);
+        if (!completed.length) return;
+
+        const archivedItems = completed.map(task => ({
+          archiveId: uid(),
+          originalId: task.id,
+          title: task.title,
+          section: task.section,
+          priority: task.priority,
+          completedAt: task.completedAt || new Date().toISOString(),
+          archivedAt: new Date().toISOString()
+        }));
+
+        archive = [...archivedItems, ...archive];
+        tasks = tasks.filter(t => !t.completed);
+
+        if (focusedTaskId && !getTask(focusedTaskId)) {
+          focusedTaskId = null;
+          stopFocusTimer(true);
+        }
+
+        saveAll();
+        render();
+        updateFocusPanel(getTask(focusedTaskId));
+      }
+
+      function restoreArchiveItem(archiveId) {
+        const item = archive.find(a => a.archiveId === archiveId);
+        if (!item) return;
+
+        const restoredTask = {
+          id: uid(),
+          title: item.title,
+          section: "today",
+          priority: item.priority || "normal",
+          completed: false,
+          createdAt: new Date().toISOString(),
+          completedAt: null
+        };
+
+        tasks.unshift(restoredTask);
+        archive = archive.filter(a => a.archiveId !== archiveId);
+        saveAll();
+        render();
+      }
+
+      function deleteArchiveItem(archiveId) {
+        archive = archive.filter(a => a.archiveId !== archiveId);
+        saveAll();
+        render();
+      }
+
+      function clearArchive() {
+        archive = [];
+        saveAll();
+        render();
+      }
+
+      function setFocusedTask(taskId) {
+        focusedTaskId = taskId;
+        focusTimerSeconds = 0;
+        stopFocusTimer(true);
+        updateFocusPanel(getTask(taskId));
+      }
+
+      function updateFocusTimerBadge() {
+        const m = String(Math.floor(focusTimerSeconds / 60)).padStart(2, "0");
+        const s = String(focusTimerSeconds % 60).padStart(2, "0");
+        focusTimerBadge.textContent = `Session: ${m}:${s}`;
+      }
+
+      function startFocusTimer() {
+        if (!focusedTaskId || focusTimerInterval) return;
+        focusTimerInterval = setInterval(() => {
+          focusTimerSeconds += 1;
+          updateFocusTimerBadge();
+        }, 1000);
+        focusTimerHint.textContent = "Space: pause";
+        focusStatusPill.textContent = "Session running";
+      }
+
+      function stopFocusTimer(silent = false) {
+        if (focusTimerInterval) {
+          clearInterval(focusTimerInterval);
+          focusTimerInterval = null;
+        }
+        if (!silent) {
+          focusTimerHint.textContent = "Space: resume";
+          if (focusedTaskId) focusStatusPill.textContent = "Paused";
+        }
+      }
+
+      function completeFocusedTask() {
+        if (!focusedTaskId) return;
+        toggleCompleted(focusedTaskId);
+        appStats.focusSessions += 1;
+        saveAll();
+        renderStats();
+      }
+
+      function formatShortDate(iso) {
+        const d = new Date(iso);
+        return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+      }
+
+      function updateFocusPanel(task) {
+        if (!task) {
+          focusTitle.textContent = "Pick a task to begin.";
+          focusBody.textContent = "Choose a task from Today, Next, or Later. Focus mode turns it into a single card with a simple session timer and clean next actions.";
+          focusStatusPill.textContent = "No task selected";
+          focusPriority.innerHTML = '<span class="pill-inline">Priority: —</span>';
+          focusSection.innerHTML = '<span class="pill-inline">Section: —</span>';
+          focusTimerSeconds = 0;
+          updateFocusTimerBadge();
+          focusTimerHint.textContent = "Space: start / pause";
+          return;
+        }
+
+        focusTitle.textContent = task.title;
+        focusBody.textContent = task.completed
+          ? "This task is completed. Archive it at end of day, or move it back into active work if needed."
+          : "Stay with this one thing. Cycle priority if needed, run a timer, then complete it and archive later.";
+
+        const priorityLabel = task.priority.charAt(0).toUpperCase() + task.priority.slice(1);
+        const sectionLabel = task.section.charAt(0).toUpperCase() + task.section.slice(1);
+
+        focusPriority.innerHTML = `<span class="pill-inline">Priority: ${priorityLabel}</span>`;
+        focusSection.innerHTML = `<span class="pill-inline">Section: ${sectionLabel}</span>`;
+        focusStatusPill.textContent = task.completed ? "Completed" : (focusTimerInterval ? "Session running" : "Ready for focus");
+        updateFocusTimerBadge();
+      }
+
+      function renderTaskRow(task) {
+        const row = document.createElement("div");
+        row.className = "task-row";
+        row.dataset.completed = task.completed ? "true" : "false";
+
+        const checkbox = document.createElement("button");
+        checkbox.className = "task-checkbox";
+        checkbox.type = "button";
+        checkbox.setAttribute("aria-label", task.completed ? "Mark as active" : "Mark as completed");
+        checkbox.textContent = task.completed ? "✓" : "";
+        checkbox.addEventListener("click", (e) => {
+          e.stopPropagation();
+          toggleCompleted(task.id);
+        });
+
+        const main = document.createElement("div");
+        main.className = "task-main";
+
+        const title = document.createElement("div");
+        title.className = "task-title";
+        title.textContent = task.title;
+
+        const meta = document.createElement("div");
+        meta.className = "task-meta";
+
+        const priorityButton = document.createElement("button");
+        priorityButton.type = "button";
+        priorityButton.className = "task-priority-button";
+        priorityButton.dataset.priority = task.priority;
+        priorityButton.textContent = `Priority: ${capitalize(task.priority)}`;
+        priorityButton.addEventListener("click", (e) => {
+          e.stopPropagation();
+          cyclePriority(task.id);
+        });
+
+        const sectionPill = document.createElement("span");
+        sectionPill.className = "task-section-pill";
+        sectionPill.textContent = capitalize(task.section);
+
+        meta.appendChild(priorityButton);
+        meta.appendChild(sectionPill);
+
+        if (task.completedAt) {
+          const completedMeta = document.createElement("span");
+          completedMeta.textContent = `Done ${formatShortDate(task.completedAt)}`;
+          meta.appendChild(completedMeta);
+        }
+
+        main.appendChild(title);
+        main.appendChild(meta);
+
+        const actions = document.createElement("div");
+        actions.className = "task-actions";
+
+        const focusBtn = actionButton("Focus", () => setFocusedTask(task.id));
+        const todayBtn = actionButton("Today", () => setSection(task.id, "today"));
+        const nextBtn = actionButton("Next", () => setSection(task.id, "next"));
+        const laterBtn = actionButton("Later", () => setSection(task.id, "later"));
+
+        actions.appendChild(focusBtn);
+        actions.appendChild(todayBtn);
+        actions.appendChild(nextBtn);
+        actions.appendChild(laterBtn);
+
+        row.appendChild(checkbox);
+        row.appendChild(main);
+        row.appendChild(actions);
+
+        row.addEventListener("click", () => setFocusedTask(task.id));
+        return row;
+      }
+
+      function renderArchiveItem(item) {
+        const wrap = document.createElement("div");
+        wrap.className = "archive-item";
+
+        const top = document.createElement("div");
+        top.className = "archive-item-top";
+
+        const left = document.createElement("div");
+        const title = document.createElement("div");
+        title.className = "archive-item-title";
+        title.textContent = item.title;
+
+        const meta = document.createElement("div");
+        meta.className = "archive-item-meta";
+        meta.innerHTML = `
+          <span class="archive-date-pill">${formatShortDate(item.archivedAt)}</span>
+          <span>From ${capitalize(item.section)}</span>
+          <span>Priority ${capitalize(item.priority)}</span>
+        `;
+
+        left.appendChild(title);
+        left.appendChild(meta);
+
+        const actions = document.createElement("div");
+        actions.className = "archive-item-actions";
+
+        const restore = document.createElement("button");
+        restore.type = "button";
+        restore.className = "archive-link";
+        restore.textContent = "Restore";
+        restore.addEventListener("click", () => restoreArchiveItem(item.archiveId));
+
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "archive-link";
+        remove.textContent = "Delete";
+        remove.addEventListener("click", () => deleteArchiveItem(item.archiveId));
+
+        actions.appendChild(restore);
+        actions.appendChild(remove);
+
+        top.appendChild(left);
+        top.appendChild(actions);
+        wrap.appendChild(top);
+
+        return wrap;
+      }
+
+      function actionButton(label, handler) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = label;
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          handler();
+        });
+        return btn;
+      }
+
+      function capitalize(value) {
+        return value.charAt(0).toUpperCase() + value.slice(1);
+      }
+
+      function renderStats() {
+        const todayCount = tasks.filter(t => t.section === "today").length;
+        const completedCount = tasks.filter(t => t.completed).length;
+        const total = tasks.length || 1;
+        const archivedCount = archive.length;
+        const ratio = Math.min(completedCount / total, 1);
+
+        statPlanned.textContent = String(todayCount);
+        statCompleted.textContent = String(completedCount);
+        statSessions.textContent = String(appStats.focusSessions || 0);
+        statArchived.textContent = String(archivedCount);
+        progressFill.style.width = `${Math.round(ratio * 100)}%`;
+      }
+
+      function renderLists() {
+        todayList.innerHTML = "";
+        nextList.innerHTML = "";
+        laterList.innerHTML = "";
+        archiveList.innerHTML = "";
+
+        const todayTasks = tasks.filter(t => t.section === "today");
+        const nextTasks = tasks.filter(t => t.section === "next");
+        const laterTasks = tasks.filter(t => t.section === "later");
+
+        nextCount.textContent = String(nextTasks.length);
+        laterCount.textContent = String(laterTasks.length);
+        archiveCount.textContent = `${archive.length} archived`;
+
+        if (!todayTasks.length) {
+          todayList.innerHTML = `<div class="empty-state">No tasks in Today yet. Add one from the quick input or move something in from Next.</div>`;
+        } else {
+          todayTasks.forEach(task => todayList.appendChild(renderTaskRow(task)));
+        }
+
+        if (!nextTasks.length) {
+          nextList.innerHTML = `<div class="empty-state">Next is empty.</div>`;
+        } else {
+          nextTasks.forEach(task => nextList.appendChild(renderTaskRow(task)));
+        }
+
+        if (!laterTasks.length) {
+          laterList.innerHTML = `<div class="empty-state">Later is empty.</div>`;
+        } else {
+          laterTasks.forEach(task => laterList.appendChild(renderTaskRow(task)));
+        }
+
+        if (!archive.length) {
+          archiveList.innerHTML = `<div class="empty-state">Nothing archived yet. Complete work during the day, then use “Archive completed” to close the ledger cleanly.</div>`;
+        } else {
+          archive.forEach(item => archiveList.appendChild(renderArchiveItem(item)));
+        }
+      }
+
+      function render() {
+        renderStats();
+        renderLists();
+      }
+
+      captureButton.addEventListener("click", () => {
+        const task = createTask(captureInput.value, "today");
+        if (!task) return;
+        captureInput.value = "";
+        setFocusedTask(task.id);
+      });
+
+      captureInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+          const task = createTask(captureInput.value, "today");
+          if (!task) return;
+          captureInput.value = "";
+          setFocusedTask(task.id);
+        }
+      });
+
+      todayAddButton.addEventListener("click", () => {
+        const task = createTask(todayInput.value, "today");
+        if (!task) return;
+        todayInput.value = "";
+      });
+
+      todayInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          const task = createTask(todayInput.value, "today");
+          if (!task) return;
+          todayInput.value = "";
+        }
+      });
+
+      focusStartButton.addEventListener("click", () => {
+        if (!focusedTaskId) {
+          const firstToday = tasks.find(t => t.section === "today" && !t.completed) || tasks[0];
+          if (!firstToday) return;
+          setFocusedTask(firstToday.id);
+        }
+        if (focusTimerInterval) {
+          stopFocusTimer();
+        } else {
+          startFocusTimer();
+        }
+      });
+
+      focusCompleteButton.addEventListener("click", () => {
+        completeFocusedTask();
+      });
+
+      focusPriorityButton.addEventListener("click", () => {
+        if (!focusedTaskId) return;
+        cyclePriority(focusedTaskId);
+      });
+
+      archiveCompletedButton.addEventListener("click", archiveCompletedTasks);
+      clearArchiveButton.addEventListener("click", clearArchive);
+
+      document.addEventListener("keydown", (e) => {
+        const activeTag = document.activeElement.tagName;
+
+        if (e.key === " " && activeTag !== "INPUT" && activeTag !== "TEXTAREA") {
+          e.preventDefault();
+          if (focusTimerInterval) stopFocusTimer();
+          else startFocusTimer();
+        }
+
+        if ((e.key === "n" || e.key === "N") && activeTag !== "INPUT" && activeTag !== "TEXTAREA") {
+          e.preventDefault();
+          todayInput.focus();
+        }
+
+        if ((e.key === "p" || e.key === "P") && focusedTaskId && activeTag !== "INPUT" && activeTag !== "TEXTAREA") {
+          e.preventDefault();
+          cyclePriority(focusedTaskId);
+        }
+
+        if (["1", "2", "3"].includes(e.key) && focusedTaskId && activeTag !== "INPUT" && activeTag !== "TEXTAREA") {
+          e.preventDefault();
+          const section = e.key === "1" ? "today" : e.key === "2" ? "next" : "later";
+          setSection(focusedTaskId, section);
+        }
+      });
+
+      render();
+      updateFocusPanel(null);
+      captureInput.focus();
+    })();
+  </script>
+</body>
+</html>
