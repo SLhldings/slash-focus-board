@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Slash Focus Board</title>
+
+  <!-- Fonts (Inter + serif substitute for Ivy Presto) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+    :root {
+      /* Colors */
+      --color-obsidian: #08080a;
+      --color-onyx: #040406;
+      --color-carbon: #121317;
+      --color-graphite: #1c1d22;
+      --color-slate: #2e3038;
+      --color-smoke: #464853;
+      --color-ash: #5e616e;
+      --color-steel: #777a88;
+      --color-fog: #9194a1;
+      --color-mist: #acafb9;
+      --color-silver: #c7c9d1;
+      --color-bone: #e2e3e9;
+      --color-paper-white: #ffffff;
+      --color-copper: #cc9166;
+      --color-gilded-gradient: #ae9357;
+      --gradient-gilded-gradient: linear-gradient(
+        103deg,
+        rgb(174, 147, 87),
+        rgb(255, 240, 204) 40%,
+        rgb(174, 147, 87) 70%,
+        rgba(189, 157, 79, 0)
+      );
+
+      /* Fonts */
+      --font-ivy-presto: "Instrument Serif", ui-serif, Georgia, "Times New Roman", serif;
+      --font-inter: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+      /* Type scale */
+      --text-eyebrow: 13px;
+      --leading-eyebrow: 1;
+      --tracking-eyebrow: -0.26px;
+
+      --text-body-xs: 16px;
+      --leading-body-xs: 1.5;
+
+      --text-body-sm: 18px;
+      --leading-body-sm: 1.38;
+      --tracking-body-sm: -0.36px;
+
+      --text-body: 20px;
+      --leading-body: 1.38;
+      --tracking-body: -0.8px;
+
+      --text-subheading: 24px;
+      --leading-subheading: 1;
+      --tracking-subheading: -0.31px;
+
+      --text-heading-sm: 44px;
+      --leading-heading-sm: 1.38;
+      --tracking-heading-sm: 0.44px;
+
+      --text-heading-lg: 64px;
+      --leading-heading-lg: 1.13;
+      --tracking-heading-lg: 0.64px;
+
+      /* Spacing */
+      --spacing-4: 4px;
+      --spacing-6: 6px;
+      --spacing-8: 8px;
+      --spacing-10: 10px;
+      --spacing-12: 12px;
+      --spacing-16: 16px;
+      --spacing-20: 20px;
+      --spacing-24: 24px;
+      --spacing-32: 32px;
+      --spacing-40: 40px;
+      --spacing-48: 48px;
+      --spacing-105: 105px;
+
+      /* Layout */
+      --page-max-width: 1216px;
+      --section-gap: 160px;
+      --card-padding: 24px;
+      --element-gap: 8px;
+
+      /* Radius */
+      --radius-sm: 2px;
+      --radius-lg: 10px;
+      --radius-full: 9999px;
+
+      /* Shadows */
+      --shadow-subtle: rgba(255, 255, 255, 0.2) 0px 0px 0px 1px;
+
+      /* Surfaces */
+      --surface-void: #08080a;
+      --surface-card: #040406;
+      --surface-panel: #121317;
+      --surface-floating: #1c1d22;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background-color: var(--surface-void);
+      color: var(--color-bone);
+      font-family: var(--font-inter);
+      font-size: var(--text-body-xs);
+      line-height: var(--leading-body-xs);
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    button {
+      font-family: inherit;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      background: none;
+      color: inherit;
+    }
+
+    a {
+      color: var(--color-copper);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .app-shell {
+      max-width: var(--page-max-width);
+      margin: 0 auto;
+      padding: var(--spacing-24) var(--spacing-16) var(--spacing-40);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-32);
+    }
+
+    /* Header / hero */
+
+    .app-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--spacing-24);
+    }
+
+    .brand-lockup {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
+      max-width: 520px;
+    }
+
+    .brand-eyebrow {
+      font-size: var(--text-eyebrow);
+      letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--color-copper);
+    }
+
+    .brand-title {
+      font-family: var(--font-ivy-presto);
+      font-size: var(--text-heading-lg);
+      line-height: var(--leading-heading-lg);
+      letter-spacing: var(--tracking-heading-lg);
+      color: var(--color-paper-white);
+    }
+
+    .brand-subtitle {
+      font-size: var(--text-body);
+      line-height: var(--leading-body);
+      letter-spacing: var(--tracking-body);
+      color: var(--color-fog);
+      max-width: 480px;
+    }
+
+    .capture-row {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      margin-top: var(--spacing-16);
+      flex-wrap: wrap;
+    }
+
+    .input-pill {
+      flex: 1 1 220px;
+      display: flex;
+      align-items: center;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-paper-white);
+      padding: var(--spacing-10) var(--spacing-16);
+      background: transparent;
+    }
+
+    .input-pill input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--color-bone);
+      font-size: 14px;
+    }
+
+    .input-pill input::placeholder {
+      color: var(--color-steel);
+    }
+
+    .primary-pill {
+      border-radius: var(--radius-full);
+      background: var(--color-paper-white);
+      color: #000000;
+      font-weight: 500;
+      padding: var(--spacing-10) var(--spacing-20);
+      white-space: nowrap;
+    }
+
+    .primary-pill:hover {
+      opacity: 0.9;
+    }
+
+    /* Layout: left rail + main + focus panel */
+
+    .app-main {
+      display: grid;
+      grid-template-columns: minmax(220px, 260px) minmax(0, 1.4fr) minmax(260px, 320px);
+      gap: var(--spacing-24);
+      align-items: flex-start;
+    }
+
+    @media (max-width: 960px) {
+      .app-main {
+        grid-template-columns: 1fr;
+      }
+
+      .focus-panel {
+        order: -1;
+      }
+    }
+
+    /* Left rail: stats + lists */
+
+    .left-rail {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-16);
+    }
+
+    .rail-card {
+      background: var(--surface-panel);
+      border-radius: var(--radius-lg);
+      padding: var(--card-padding);
+      border: 1px solid var(--color-graphite);
+    }
+
+    .rail-card + .rail-card {
+      margin-top: var(--spacing-8);
+    }
+
+    .rail-label {
+      font-size: var(--text-eyebrow);
+      letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase;
+      color: var(--color-fog);
+      margin-bottom: var(--spacing-8);
+    }
+
+    .stats-row {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-8);
+    }
+
+    .stat-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 14px;
+      color: var(--color-mist);
+    }
+
+    .stat-line strong {
+      color: var(--color-bone);
+    }
+
+    .progress-bar {
+      position: relative;
+      height: 4px;
+      border-radius: var(--radius-full);
+      background: var(--color-slate);
+      overflow: hidden;
+      margin-top: var(--spacing-12);
+    }
+
+    .progress-fill {
+      position: absolute;
+      inset: 0;
+      width: 0;
+      background-image: var(--gradient-gilded-gradient);
+      border-radius: var(--radius-full);
+      transition: width 180ms ease-out;
+    }
+
+    .list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-8);
+    }
+
+    .list-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-silver);
+    }
+
+    .list-count {
+      font-size: 12px;
+      color: var(--color-ash);
+    }
+
+    .pill-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-steel);
+      padding: var(--spacing-6) var(--spacing-10);
+      font-size: 12px;
+      color: var(--color-bone);
+    }
+
+    /* Main: Today list */
+
+    .board-card {
+      background: var(--surface-card);
+      border-radius: var(--radius-lg);
+      padding: var(--card-padding);
+      border: 1px solid var(--color-graphite);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
+    }
+
+    .board-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: var(--spacing-12);
+    }
+
+    .board-title {
+      font-family: var(--font-ivy-presto);
+      font-size: var(--text-heading-sm);
+      line-height: var(--leading-heading-sm);
+      letter-spacing: var(--tracking-heading-sm);
+      color: var(--color-paper-white);
+    }
+
+    .board-subtitle {
+      font-size: 14px;
+      color: var(--color-fog);
+      max-width: 320px;
+    }
+
+    .board-quick-add {
+      display: flex;
+      gap: var(--spacing-8);
+      margin-top: var(--spacing-16);
+      flex-wrap: wrap;
+    }
+
+    .quick-input {
+      flex: 1 1 200px;
+      background: var(--surface-panel);
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-slate);
+      padding: var(--spacing-8) var(--spacing-16);
+      display: flex;
+      align-items: center;
+    }
+
+    .quick-input input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--color-bone);
+      font-size: 14px;
+    }
+
+    .quick-input input::placeholder {
+      color: var(--color-steel);
+    }
+
+    .ghost-button {
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-paper-white);
+      padding: var(--spacing-8) var(--spacing-16);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-paper-white);
+      background: transparent;
+    }
+
+    .ghost-button:hover {
+      background-color: rgba(255, 255, 255, 0.06);
+    }
+
+    .task-list {
+      margin-top: var(--spacing-16);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-8);
+    }
+
+    .task-row {
+      display: grid;
+      grid-template-columns: 24px minmax(0, 1fr) auto;
+      gap: var(--spacing-8);
+      align-items: center;
+      padding: var(--spacing-8) var(--spacing-12);
+      border-radius: var(--radius-lg);
+      background-color: var(--surface-panel);
+      border: 1px solid var(--color-graphite);
+      cursor: pointer;
+    }
+
+    .task-row[data-completed="true"] {
+      opacity: 0.55;
+      border-style: dashed;
+    }
+
+    .task-row:hover {
+      border-color: var(--color-slate);
+    }
+
+    .task-checkbox {
+      width: 18px;
+      height: 18px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-steel);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: var(--color-paper-white);
+    }
+
+    .task-main {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .task-title {
+      font-size: 14px;
+      color: var(--color-bone);
+    }
+
+    .task-meta {
+      font-size: 12px;
+      color: var(--color-ash);
+      display: flex;
+      gap: var(--spacing-8);
+      flex-wrap: wrap;
+    }
+
+    .task-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .task-priority {
+      color: var(--color-copper);
+    }
+
+    .task-section-pill {
+      font-size: 11px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-steel);
+      padding: 2px 8px;
+      color: var(--color-mist);
+    }
+
+    .task-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-8);
+      font-size: 12px;
+      color: var(--color-fog);
+    }
+
+    .task-actions button {
+      color: var(--color-fog);
+    }
+
+    .task-actions button:hover {
+      color: var(--color-paper-white);
+    }
+
+    /* Focus panel */
+
+    .focus-panel {
+      background: var(--surface-floating);
+      border-radius: var(--radius-lg);
+      padding: var(--card-padding);
+      border: 1px solid var(--color-graphite);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-12);
+      min-height: 220px;
+    }
+
+    .focus-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: var(--spacing-12);
+    }
+
+    .focus-label {
+      font-size: var(--text-eyebrow);
+      letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase;
+      color: var(--color-fog);
+    }
+
+    .focus-pill {
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-steel);
+      padding: 4px 10px;
+      font-size: 12px;
+      color: var(--color-mist);
+    }
+
+    .focus-title {
+      font-family: var(--font-ivy-presto);
+      font-size: var(--text-heading-sm);
+      line-height: var(--leading-heading-sm);
+      letter-spacing: var(--tracking-heading-sm);
+      color: var(--color-paper-white);
+    }
+
+    .focus-body {
+      font-size: 14px;
+      color: var(--color-fog);
+      margin-top: var(--spacing-8);
+    }
+
+    .focus-meta-row {
+      display: flex;
+      gap: var(--spacing-16);
+      flex-wrap: wrap;
+      font-size: 12px;
+      color: var(--color-mist);
+      margin-top: var(--spacing-8);
+    }
+
+    .focus-meta-row span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .focus-controls {
+      margin-top: var(--spacing-16);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-12);
+      flex-wrap: wrap;
+    }
+
+    .focus-controls-left {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-8);
+    }
+
+    .focus-badge {
+      font-size: 12px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-steel);
+      padding: 4px 8px;
+      color: var(--color-mist);
+    }
+
+    .focus-timer {
+      font-size: 14px;
+      color: var(--color-silver);
+    }
+
+    .focus-controls-right {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-8);
+    }
+
+    .focus-primary {
+      border-radius: var(--radius-full);
+      background: var(--color-paper-white);
+      color: #000000;
+      font-weight: 500;
+      padding: var(--spacing-8) var(--spacing-16);
+      font-size: 14px;
+    }
+
+    .focus-primary:hover {
+      opacity: 0.9;
+    }
+
+    .focus-secondary {
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-paper-white);
+      padding: var(--spacing-8) var(--spacing-16);
+      font-size: 14px;
+      color: var(--color-paper-white);
+      background: transparent;
+    }
+
+    .focus-secondary:hover {
+      background-color: rgba(255, 255, 255, 0.06);
+    }
+
+    .hint-row {
+      margin-top: var(--spacing-12);
+      font-size: 11px;
+      color: var(--color-ash);
+    }
+
+    .hint-row code {
+      font-size: 11px;
+      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      background-color: rgba(255, 255, 255, 0.02);
+      padding: 2px 6px;
+      border-radius: 9999px;
+      border: 1px solid var(--color-slate);
+    }
+
+    /* Utility */
+
+    .pill-inline {
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-graphite);
+      padding: 2px 8px;
+      font-size: 12px;
+      color: var(--color-mist);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="brand-lockup">
+        <div class="brand-eyebrow">Slash Focus Board</div>
+        <h1 class="brand-title">Midnight ledger for deep work.</h1>
+        <p class="brand-subtitle">
+          Capture everything, mark what matters today, and drop into a single-task focus mode that feels
+          like a desktop app instead of a noisy kanban.
+        </p>
+        <div class="capture-row">
+          <div class="input-pill">
+            <input id="captureInput" type="text" placeholder="Quick task idea… (⌘/Ctrl + Enter to add)" />
+          </div>
+          <button class="primary-pill" id="captureButton">Add to Today</button>
+        </div>
+      </div>
+      <div class="rail-card">
+        <div class="rail-label">Today’s ledger</div>
+        <div class="stats-row">
+          <div class="stat-line">
+            <span>Planned</span>
+            <strong id="statPlanned">0</strong>
+          </div>
+          <div class="stat-line">
+            <span>Completed</span>
+            <strong id="statCompleted">0</strong>
+          </div>
+          <div class="stat-line">
+            <span>Focus sessions</span>
+            <strong id="statSessions">0</strong>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <!-- Left rail: Next / Later -->
+      <aside class="left-rail" aria-label="Secondary queues">
+        <section class="rail-card">
+          <div class="list-header">
+            <div>
+              <div class="rail-label">Queue</div>
+              <div class="list-title">Next</div>
+            </div>
+            <div class="list-count" id="nextCount">0</div>
+          </div>
+          <div class="task-list" id="nextList"></div>
+        </section>
+
+        <section class="rail-card">
+          <div class="list-header">
+            <div>
+              <div class="list-title">Later</div>
+            </div>
+            <div class="list-count" id="laterCount">0</div>
+          </div>
+          <div class="task-list" id="laterList"></div>
+        </section>
+      </aside>
+
+      <!-- Center: Today list -->
+      <section class="board-card" aria-label="Today list">
+        <header class="board-header">
+          <div>
+            <h2 class="board-title">Today</h2>
+            <p class="board-subtitle">
+              Keep this list short. Everything here is fair game for focus mode. Use the queues on the left
+              to stage work.
+            </p>
+          </div>
+        </header>
+
+        <div class="board-quick-add">
+          <div class="quick-input">
+            <input id="todayInput" type="text" placeholder="Add a focused task… (Enter)" />
+          </div>
+          <button class="ghost-button" id="todayAddButton">Add</button>
+        </div>
+
+        <div class="task-list" id="todayList"></div>
+      </section>
+
+      <!-- Focus panel -->
+      <aside class="focus-panel" aria-label="Focus mode">
+        <header class="focus-header">
+          <div>
+            <div class="focus-label">Focus mode</div>
+            <h2 class="focus-title" id="focusTitle">Pick a task to begin.</h2>
+          </div>
+          <div id="focusStatusPill" class="focus-pill">No task selected</div>
+        </header>
+
+        <p class="focus-body" id="focusBody">
+          Choose a task from Today, Next, or Later. Focus mode turns it into a single card, with a simple
+          session timer and keyboard shortcuts so you can stay in one window.
+        </p>
+
+        <div class="focus-meta-row">
+          <span id="focusPriority"><span class="pill-inline">Priority: —</span></span>
+          <span id="focusSection"><span class="pill-inline">Section: —</span></span>
+        </div>
+
+        <div class="focus-controls">
+          <div class="focus-controls-left">
+            <span class="focus-badge" id="focusTimerBadge">Session: 00:00</span>
+            <span class="focus-timer" id="focusTimerHint">Space: start / pause</span>
+          </div>
+          <div class="focus-controls-right">
+            <button class="focus-secondary" id="focusCompleteButton">Complete</button>
+            <button class="focus-primary" id="focusStartButton">Start focus</button>
+          </div>
+        </div>
+
+        <p class="hint-row">
+          Shortcuts:
+          <code>N</code> add to Today,
+          <code>1</code>/<code>2</code>/<code>3</code> move to Today/Next/Later,
+          <code>Space</code> start/pause focus,
+          <code>⌘/Ctrl + Enter</code> quick capture.
+        </p>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const STORAGE_KEY = "slashFocusBoard.v1.tasks";
+
+      /** Task model:
+       * { id: string, title: string, section: 'today'|'next'|'later', priority: 'low'|'normal'|'high', completed: boolean }
+       */
+
+      let tasks = loadTasks();
+      let focusedTaskId = null;
+      let focusTimerSeconds = 0;
+      let focusTimerInterval = null;
+      let focusSessions = 0;
+
+      const captureInput = document.getElementById("captureInput");
+      const captureButton = document.getElementById("captureButton");
+      const todayInput = document.getElementById("todayInput");
+      const todayAddButton = document.getElementById("todayAddButton");
+
+      const todayList = document.getElementById("todayList");
+      const nextList = document.getElementById("nextList");
+      const laterList = document.getElementById("laterList");
+
+      const nextCount = document.getElementById("nextCount");
+      const laterCount = document.getElementById("laterCount");
+
+      const statPlanned = document.getElementById("statPlanned");
+      const statCompleted = document.getElementById("statCompleted");
+      const statSessions = document.getElementById("statSessions");
+      const progressFill = document.getElementById("progressFill");
+
+      const focusTitle = document.getElementById("focusTitle");
+      const focusBody = document.getElementById("focusBody");
+      const focusStatusPill = document.getElementById("focusStatusPill");
+      const focusPriority = document.getElementById("focusPriority");
+      const focusSection = document.getElementById("focusSection");
+      const focusTimerBadge = document.getElementById("focusTimerBadge");
+      const focusTimerHint = document.getElementById("focusTimerHint");
+      const focusCompleteButton = document.getElementById("focusCompleteButton");
+      const focusStartButton = document.getElementById("focusStartButton");
+
+      function loadTasks() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return [];
+          const parsed = JSON.parse(raw);
+          if (!Array.isArray(parsed)) return [];
+          return parsed;
+        } catch {
+          return [];
+        }
+      }
+
+      function saveTasks() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+        } catch {
+          // ignore
+        }
+      }
+
+      function createTask(title, section) {
+        const trimmed = title.trim();
+        if (!trimmed) return;
+        const task = {
+          id: String(Date.now()) + "-" + Math.random().toString(16).slice(2),
+          title: trimmed,
+          section: section || "today",
+          priority: "normal",
+          completed: false
+        };
+        tasks.unshift(task);
+        saveTasks();
+        render();
+        return task;
+      }
+
+      function setSection(taskId, section) {
+        const t = tasks.find(x => x.id === taskId);
+        if (!t) return;
+        t.section = section;
+        saveTasks();
+        render();
+        if (focusedTaskId === taskId) {
+          updateFocusPanel(t);
+        }
+      }
+
+      function toggleCompleted(taskId) {
+        const t = tasks.find(x => x.id === taskId);
+        if (!t) return;
+        t.completed = !t.completed;
+        saveTasks();
+        render();
+        if (focusedTaskId === taskId) {
+          updateFocusPanel(t);
+        }
+      }
+
+      function setPriority(taskId, priority) {
+        const t = tasks.find(x => x.id === taskId);
+        if (!t) return;
+        t.priority = priority;
+        saveTasks();
+        render();
+        if (focusedTaskId === taskId) {
+          updateFocusPanel(t);
+        }
+      }
+
+      function setFocusedTask(taskId) {
+        focusedTaskId = taskId;
+        focusTimerSeconds = 0;
+        stopFocusTimer();
+        const t = tasks.find(x => x.id === taskId);
+        updateFocusPanel(t || null);
+      }
+
+      function startFocusTimer() {
+        if (!focusedTaskId) return;
+        if (focusTimerInterval) return;
+        focusTimerInterval = setInterval(() => {
+          focusTimerSeconds += 1;
+          updateFocusTimerBadge();
+        }, 1000);
+        focusTimerHint.textContent = "Space: pause";
+        focusStatusPill.textContent = "Session running";
+      }
+
+      function stopFocusTimer() {
+        if (focusTimerInterval) {
+          clearInterval(focusTimerInterval);
+          focusTimerInterval = null;
+          focusTimerHint.textContent = "Space: resume";
+          if (focusedTaskId) {
+            focusStatusPill.textContent = "Paused";
+          }
+        }
+      }
+
+      function completeFocusedTask() {
+        if (!focusedTaskId) return;
+        toggleCompleted(focusedTaskId);
+        focusSessions += 1;
+        statSessions.textContent = String(focusSessions);
+        setFocusedTask(null);
+      }
+
+      function updateFocusTimerBadge() {
+        const m = String(Math.floor(focusTimerSeconds / 60)).padStart(2, "0");
+        const s = String(focusTimerSeconds % 60).padStart(2, "0");
+        focusTimerBadge.textContent = `Session: ${m}:${s}`;
+      }
+
+      function renderStats() {
+        const todayCount = tasks.filter(t => t.section === "today").length;
+        const completedCount = tasks.filter(t => t.completed).length;
+        const total = tasks.length || 1;
+        const ratio = Math.min(completedCount / total, 1);
+        statPlanned.textContent = String(todayCount);
+        statCompleted.textContent = String(completedCount);
+        statSessions.textContent = String(focusSessions);
+        progressFill.style.width = `${Math.round(ratio * 100)}%`;
+      }
+
+      function renderLists() {
+        todayList.innerHTML = "";
+        nextList.innerHTML = "";
+        laterList.innerHTML = "";
+
+        const todayTasks = tasks.filter(t => t.section === "today");
+        const nextTasks = tasks.filter(t => t.section === "next");
+        const laterTasks = tasks.filter(t => t.section === "later");
+
+        nextCount.textContent = String(nextTasks.length);
+        laterCount.textContent = String(laterTasks.length);
+
+        todayTasks.forEach(t => todayList.appendChild(renderTaskRow(t)));
+        nextTasks.forEach(t => nextList.appendChild(renderTaskRow(t)));
+        laterTasks.forEach(t => laterList.appendChild(renderTaskRow(t)));
+      }
+
+      function renderTaskRow(task) {
+        const row = document.createElement("div");
+        row.className = "task-row";
+        row.dataset.id = task.id;
+        row.dataset.completed = task.completed ? "true" : "false";
+
+        const checkbox = document.createElement("button");
+        checkbox.type = "button";
+        checkbox.className = "task-checkbox";
+        checkbox.setAttribute("aria-label", task.completed ? "Mark as not completed" : "Mark as completed");
+        checkbox.textContent = task.completed ? "✓" : "";
+        checkbox.addEventListener("click", (e) => {
+          e.stopPropagation();
+          toggleCompleted(task.id);
+        });
+
+        const main = document.createElement("div");
+        main.className = "task-main";
+
+        const title = document.createElement("div");
+        title.className = "task-title";
+        title.textContent = task.title;
+        main.appendChild(title);
+
+        const meta = document.createElement("div");
+        meta.className = "task-meta";
+
+        const prioritySpan = document.createElement("span");
+        prioritySpan.className = "task-priority";
+        prioritySpan.textContent = task.priority === "high"
+          ? "High priority"
+          : task.priority === "low"
+          ? "Low priority"
+          : "Normal priority";
+        meta.appendChild(prioritySpan);
+
+        const sectionSpan = document.createElement("span");
+        sectionSpan.textContent = task.section === "today"
+          ? "Today"
+          : task.section === "next"
+          ? "Next"
+          : "Later";
+        meta.appendChild(sectionSpan);
+
+        if (task.completed) {
+          const completedSpan = document.createElement("span");
+          completedSpan.textContent = "Completed";
+          meta.appendChild(completedSpan);
+        }
+
+        main.appendChild(meta);
+
+        const actions = document.createElement("div");
+        actions.className = "task-actions";
+
+        const focusBtn = document.createElement("button");
+        focusBtn.type = "button";
+        focusBtn.textContent = "Focus";
+        focusBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          setFocusedTask(task.id);
+        });
+        actions.appendChild(focusBtn);
+
+        const moveToday = document.createElement("button");
+        moveToday.type = "button";
+        moveToday.textContent = "Today";
+        moveToday.addEventListener("click", (e) => {
+          e.stopPropagation();
+          setSection(task.id, "today");
+        });
+        actions.appendChild(moveToday);
+
+        const moveNext = document.createElement("button");
+        moveNext.type = "button";
+        moveNext.textContent = "Next";
+        moveNext.addEventListener("click", (e) => {
+          e.stopPropagation();
+          setSection(task.id, "next");
+        });
+        actions.appendChild(moveNext);
+
+        const moveLater = document.createElement("button");
+        moveLater.type = "button";
+        moveLater.textContent = "Later";
+        moveLater.addEventListener("click", (e) => {
+          e.stopPropagation();
+          setSection(task.id, "later");
+        });
+        actions.appendChild(moveLater);
+
+        row.appendChild(checkbox);
+        row.appendChild(main);
+        row.appendChild(actions);
+
+        row.addEventListener("click", () => {
+          setFocusedTask(task.id);
+        });
+
+        return row;
+      }
+
+      function updateFocusPanel(task) {
+        if (!task) {
+          focusTitle.textContent = "Pick a task to begin.";
+          focusBody.textContent =
+            "Choose a task from Today, Next, or Later. Focus mode turns it into a single card, with a simple session timer and keyboard shortcuts.";
+          focusStatusPill.textContent = "No task selected";
+          focusPriority.innerHTML = '<span class="pill-inline">Priority: —</span>';
+          focusSection.innerHTML = '<span class="pill-inline">Section: —</span>';
+          focusTimerSeconds = 0;
+          updateFocusTimerBadge();
+          focusTimerHint.textContent = "Space: start";
+          return;
+        }
+
+        focusTitle.textContent = task.title;
+        focusBody.textContent = task.completed
+          ? "This task is marked as completed. You can still run a reflection session or move it back to an active queue."
+          : "Drop into deep work on this single task. Use Space to start/pause the session timer, then mark it complete when you finish.";
+
+        const priorityLabel =
+          task.priority === "high"
+            ? "High"
+            : task.priority === "low"
+            ? "Low"
+            : "Normal";
+
+        focusPriority.innerHTML =
+          '<span class="pill-inline">Priority: ' + priorityLabel + "</span>";
+        const sectionLabel =
+          task.section === "today"
+            ? "Today"
+            : task.section === "next"
+            ? "Next"
+            : "Later";
+        focusSection.innerHTML =
+          '<span class="pill-inline">Section: ' + sectionLabel + "</span>";
+
+        focusStatusPill.textContent = task.completed ? "Completed" : "Ready for focus";
+        updateFocusTimerBadge();
+        focusTimerHint.textContent = "Space: start";
+      }
+
+      function render() {
+        renderStats();
+        renderLists();
+      }
+
+      // Event wiring
+
+      captureButton.addEventListener("click", () => {
+        const value = captureInput.value;
+        if (!value.trim()) return;
+        const task = createTask(value, "today");
+        captureInput.value = "";
+        setFocusedTask(task.id);
+      });
+
+      captureInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+          const value = captureInput.value;
+          if (!value.trim()) return;
+          const task = createTask(value, "today");
+          captureInput.value = "";
+          setFocusedTask(task.id);
+        }
+      });
+
+      todayAddButton.addEventListener("click", () => {
+        const value = todayInput.value;
+        if (!value.trim()) return;
+        createTask(value, "today");
+        todayInput.value = "";
+      });
+
+      todayInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          const value = todayInput.value;
+          if (!value.trim()) return;
+          createTask(value, "today");
+          todayInput.value = "";
+        }
+      });
+
+      focusStartButton.addEventListener("click", () => {
+        if (!focusedTaskId) {
+          // pick first Today task by default
+          const first = tasks.find(t => t.section === "today");
+          if (!first) return;
+          setFocusedTask(first.id);
+        }
+        if (focusTimerInterval) {
+          stopFocusTimer();
+        } else {
+          startFocusTimer();
+        }
+      });
+
+      focusCompleteButton.addEventListener("click", () => {
+        if (!focusedTaskId) return;
+        completeFocusedTask();
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === " " && !["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) {
+          e.preventDefault();
+          if (focusTimerInterval) {
+            stopFocusTimer();
+          } else {
+            startFocusTimer();
+          }
+        }
+
+        if (e.key === "n" || e.key === "N") {
+          todayInput.focus();
+        }
+
+        if (["1", "2", "3"].includes(e.key) && focusedTaskId) {
+          e.preventDefault();
+          const section =
+            e.key === "1" ? "today" : e.key === "2" ? "next" : "later";
+          setSection(focusedTaskId, section);
+        }
+      });
+
+      // Initial render
+      render();
+      captureInput.focus();
+    })();
+  </script>
+</body>
+</html>
